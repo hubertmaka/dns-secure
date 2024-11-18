@@ -1,14 +1,39 @@
-version: "3.8"
+version: "3.9"
+
+networks:
+  virtual_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.0.0/24
+
 services:
-  bind9:
-    image: bind9_image:0.1
-    container_name: bind9
-    ports:
-      - "53:53/udp"
-      - "53:53/tcp"
-    restart: unless-stopped
-    volumes:
-      - ./bind9/etc/bind/named.conf.local:/etc/bind/named.conf.local
-      - ./bind9/etc/bind/named.conf.options:/etc/bind/named.conf.options
-      - ./bind9/etc/bind/db.homelab.lan:/etc/bind/db.homelab.lan
-      - ./bind9/etc/bind/db.192.168:/etc/bind/db.192.168
+  user:
+    build:
+      context: ./user
+    image: ubuntu:latest
+    container_name: user
+    networks:
+      virtual_network:
+        ipv4_address: 192.168.0.100
+    tty: true
+
+  dns_server:
+    build:
+      context: ./dns_server
+    image: ubuntu:latest
+    container_name: dns_server
+    networks:
+      virtual_network:
+        ipv4_address: 192.168.0.10
+    tty: true
+
+  attacker:
+    build:
+      context: ./attacker
+    image: ubuntu:latest
+    container_name: attacker
+    networks:
+      virtual_network:
+        ipv4_address: 192.168.0.200
+    tty: true
