@@ -10,7 +10,7 @@ The goal of this project is to show DNS communication vulnerabilities and secure
    ```
 2. Go into cloned repo directory:
    ```bash
-   cd ./dns-secure
+   cd ./dns-secure/dns-spoofing
    ```
 3. Check containers:
    ```bash
